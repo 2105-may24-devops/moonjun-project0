@@ -1,11 +1,13 @@
 import curses
 import os
 from pathlib import Path
+from blessed import Terminal
 
 class FileNavigator(object):
     UP = -1
     DOWN = 1
     IN = 0
+    OUT = -2
 
     def __init__(self, directory):
         self.root = directory
@@ -17,8 +19,9 @@ class FileNavigator(object):
         curses.noecho()
         curses.cbreak()
         curses.start_color()
+        curses.curs_set(False)
 
-        #self.w, self.h = self.stdscr.getmaxyx()
+        self.w, self.h = self.stdscr.getmaxyx()
         self.min_row = 0
         #
         self.max_row = 1000
@@ -40,7 +43,22 @@ class FileNavigator(object):
             elif key == curses.KEY_DOWN:
                 self.scrolling(self.DOWN)
             elif key == key in [10, 13]:
-                self.entering(self.IN, self.menu)
+                if Path.is_dir(Path(self.root).joinpath(self.menu[self.curr_row])):
+                    self.change_directory()
+            elif key == 104:
+                win = curses.newwin(5, 40, 7, 20)
+                win.touchwin()
+                win.refresh()
+                
+                
+            # Breaks out of fullscreen after pressing 'q'
+            elif key == 113:
+                curses.nocbreak()
+                self.stdscr.keypad(False)
+                curses.echo()
+                curses.curs_set(True)
+                curses.endwin()
+                break
 
     def scrolling(self, direction):
         next_row = self.curr_row + direction
@@ -62,14 +80,15 @@ class FileNavigator(object):
             self.curr_row = next_row
             return
 
-    def entering(self, direction, menu):
-        # ['..', '.vscode', 'directory1', 'directory2', ..., 'test.txt' ]
-        t_dir = Path(self.root).joinpath(menu[self.curr_row])
-        if direction == self.IN and Path.is_dir(t_dir):
-            #change_directories(self, t_dir)
-            os.chdir(t_dir)
-            self.menu = get_directories(Path.cwd()) + get_files(Path.cwd())
+    def change_directory(self):
 
+        t_dir = Path(self.root).joinpath(self.menu[self.curr_row])
+        os.chdir(t_dir)
+        self.root = Path.cwd()
+        self.menu = get_directories(self.root) + get_files(self.root)
+        self.curr_row = 0
+        return
+    
     def print_screen(self, menu):
         self.stdscr.erase()
         for i, row in enumerate(menu[self.min_row:self.min_row + self.max_lines_per_page]):
@@ -97,8 +116,6 @@ def main():
     start_folder = Path.cwd()#'/mnt/c'
     test = FileNavigator(start_folder)
     test.run_program()
-    #pathd = get_directories(start_folder) + get_files(start_folder)
-    #print(Path.is_dir(Path(start_folder).joinpath('directory1')))
 
 if __name__=='__main__':
     main()
