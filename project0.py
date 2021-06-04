@@ -1,7 +1,7 @@
+from pathlib import Path
 import curses
 import os
-from pathlib import Path
-from blessed import Terminal
+
 
 class FileNavigator(object):
     UP = -1
