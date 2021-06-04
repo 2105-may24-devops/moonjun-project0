@@ -1,6 +1,6 @@
+from pathlib import Path
 import curses
 import os
-from pathlib import Path
 
 
 class FileNavigator(object):
