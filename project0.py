@@ -1,6 +1,10 @@
+from pathlib import Path
 import curses
 import os
+<<<<<<< .merge_file_HrplXd
 from pathlib import Path
+=======
+>>>>>>> .merge_file_JjsEgg
 
 
 class FileNavigator(object):
