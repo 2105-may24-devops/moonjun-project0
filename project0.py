@@ -37,19 +37,17 @@ class FileNavigator(object):
         while True:
             self.print_screen(self.menu)
             key = self.stdscr.getch()
+            selected = Path(self.root).joinpath(self.menu[self.curr_row])
 
             if key == curses.KEY_UP:
                 self.scrolling(self.UP)
             elif key == curses.KEY_DOWN:
                 self.scrolling(self.DOWN)
             elif key == key in [10, 13]:
-                if Path.is_dir(Path(self.root).joinpath(self.menu[self.curr_row])):
+                if Path.is_dir(selected):
                     self.change_directory()
-            elif key == 104:
-                win = curses.newwin(5, 40, 7, 20)
-                win.touchwin()
-                win.refresh()
-                
+                elif Path.is_file(selected):
+                    self.select_file()
                 
             # Breaks out of fullscreen after pressing 'q'
             elif key == 113:
@@ -79,7 +77,8 @@ class FileNavigator(object):
         if direction == self.DOWN and (next_row < self.max_lines_per_page) and (self.min_row + next_row < self.max_row):
             self.curr_row = next_row
             return
-
+    def select_file(self):
+        pass
     def change_directory(self):
 
         t_dir = Path(self.root).joinpath(self.menu[self.curr_row])
@@ -98,10 +97,6 @@ class FileNavigator(object):
                 self.stdscr.addstr(i,0, row)
         self.stdscr.refresh()
 
-def change_directories(Object, directory):
-    #Object.menu = directory
-    pass
-
 def get_files(dir: str):
     files = next(os.walk(dir))[2]
     return files
@@ -113,7 +108,7 @@ def get_directories(dir: str):
 
 
 def main():
-    start_folder = Path.cwd()#'/mnt/c'
+    start_folder = Path.cwd()
     test = FileNavigator(start_folder)
     test.run_program()
 
