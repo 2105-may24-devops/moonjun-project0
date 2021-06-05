@@ -2,6 +2,7 @@ from pathlib import Path
 import curses
 import os
 
+#Temp change to see the git graph
 
 class FileNavigator(object):
     UP = -1
