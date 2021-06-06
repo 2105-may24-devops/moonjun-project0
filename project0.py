@@ -1,6 +1,9 @@
 from pathlib import Path
 from curses import ascii
+from deleter import Deleter
+import shutil
 import curses
+import sys
 import os
 
 class FileNavigator(object):
@@ -51,12 +54,6 @@ class FileNavigator(object):
             elif key == 100:
                 selected = Path(self.curr_dir).joinpath(self.menu[self.curr_row])
                 self.select_file(selected)
-
-                #if Path.is_file(selected):#Path(self.curr_dir).joinpath(self.menu[self.curr_row])):
-                #    #selected = Path(self.curr_dir).joinpath(self.menu[self.curr_row])
-                #    self.select_file(selected)
-                #elif Path.is_dir(selected):
-                #    self.select_dir(selected)
                 
             # Breaks out of fullscreen after pressing 'q'
             elif key == 113:
@@ -165,11 +162,17 @@ def write_to_file_delete(Object):
     file_object.close()
 
 def main():
-    start_folder = Path.cwd()
-    test = FileNavigator(start_folder)
-    test.run_program()
-    os.chdir(test.root)
-    create_delete_file(test)
+    if len(sys.argv) < 2:
+        start_folder = Path.cwd()
+        test = FileNavigator(start_folder)
+        test.run_program()
+        os.chdir(test.root)
+        create_delete_file(test)
+    else:
+        d_object = Deleter()
+        d_object.read_file(sys.argv[1])
+        print(d_object.deletion_list)
+        #deleter.delete_files()
 
 if __name__=='__main__':
     main()
