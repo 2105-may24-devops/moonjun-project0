@@ -1,7 +1,10 @@
 from pathlib import Path
+from curses import ascii
+from deleter import Deleter
+import shutil
 import curses
+import sys
 import os
-
 
 class FileNavigator(object):
     UP = -1
@@ -11,7 +14,8 @@ class FileNavigator(object):
 
     def __init__(self, directory):
         self.root = directory
-        self.menu = get_directories(self.root) + get_files(self.root)
+        self.curr_dir = directory
+        self.menu = get_directories(self.curr_dir) + get_files(self.curr_dir)
 
         # Initializing the terminal
         self.stdscr = curses.initscr()
@@ -23,7 +27,6 @@ class FileNavigator(object):
 
         self.w, self.h = self.stdscr.getmaxyx()
         self.min_row = 0
-        #
         self.max_row = 1000
         # Max number of rows of the terminal
         self.max_lines_per_page = curses.LINES
@@ -32,22 +35,25 @@ class FileNavigator(object):
 
         curses.init_pair(1, curses.COLOR_BLACK, curses.COLOR_MAGENTA)
 
+        #I might need to make a new class for these.
+        self.to_delete = []
+
     def run_program(self):
 
         while True:
             self.print_screen(self.menu)
             key = self.stdscr.getch()
-            selected = Path(self.root).joinpath(self.menu[self.curr_row])
 
             if key == curses.KEY_UP:
                 self.scrolling(self.UP)
             elif key == curses.KEY_DOWN:
                 self.scrolling(self.DOWN)
             elif key == key in [10, 13]:
-                if Path.is_dir(selected):
+                if Path.is_dir(Path(self.curr_dir).joinpath(self.menu[self.curr_row])):
                     self.change_directory()
-                elif Path.is_file(selected):
-                    self.select_file()
+            elif key == 100:
+                selected = Path(self.curr_dir).joinpath(self.menu[self.curr_row])
+                self.select_file(selected)
                 
             # Breaks out of fullscreen after pressing 'q'
             elif key == 113:
@@ -56,7 +62,7 @@ class FileNavigator(object):
                 curses.echo()
                 curses.curs_set(True)
                 curses.endwin()
-                break
+                return
 
     def scrolling(self, direction):
         next_row = self.curr_row + direction
@@ -77,14 +83,46 @@ class FileNavigator(object):
         if direction == self.DOWN and (next_row < self.max_lines_per_page) and (self.min_row + next_row < self.max_row):
             self.curr_row = next_row
             return
-    def select_file(self):
-        pass
+
+    # curses.newwwin(nlines, ncol, begin_y, begin_x)
+    # curses.addstr(y, x, str[,attr])
+
+    def select_file(self, selected):
+
+        # Initialize new window for prompt.
+        win = curses.newwin(2,self.h, self.w - 2, 0)
+
+        if Path.is_file(selected):
+            if str(selected) not in self.to_delete:
+                self.to_delete.append(str(selected))
+                win.addstr(0, 0, "File marked for deletion.")
+                win.addstr(1,0, "Press any key to continue.")
+            else:
+                self.to_delete.remove(str(selected))
+                win.addstr(0, 0, "File unmarked for deletion.")
+                win.addstr(1,0, "Press any key to continue.")
+        else:
+            if str(selected) not in self.to_delete:
+                self.to_delete.append(str(selected))
+                win.addstr(0, 0, "File marked for deletion.")
+                win.addstr(1,0, "Press any key to continue.")
+            else:
+                self.to_delete.remove(str(selected))
+                win.addstr(0, 0, "File unmarked for deletion.")
+                win.addstr(1,0, "Press any key to continue.")
+
+        win.touchwin()
+        win.refresh()
+        win.getch()
+        del win
+        return
+
     def change_directory(self):
 
-        t_dir = Path(self.root).joinpath(self.menu[self.curr_row])
+        t_dir = Path(self.curr_dir).joinpath(self.menu[self.curr_row])
         os.chdir(t_dir)
-        self.root = Path.cwd()
-        self.menu = get_directories(self.root) + get_files(self.root)
+        self.curr_dir = Path.cwd()
+        self.menu = get_directories(self.curr_dir) + get_files(self.curr_dir)
         self.curr_row = 0
         return
     
@@ -106,11 +144,36 @@ def get_directories(dir: str):
     dir.insert(0, '..')
     return dir
 
+def create_delete_file(Object):
+
+    if Path.is_dir(Path(Object.root).joinpath('deletion')):
+        os.chdir('./deletion')
+        write_to_file_delete(Object)
+    else:
+        Path.mkdir(Path(Object.root).joinpath('deletion'))
+        os.chdir('./deletion')
+        write_to_file_delete(Object)
+    return
+
+def write_to_file_delete(Object):
+    file_object = open('files-to-delete.txt', 'w')
+    for i in Object.to_delete:
+        file_object.write(i + '\n')
+    file_object.close()
 
 def main():
-    start_folder = Path.cwd()
-    test = FileNavigator(start_folder)
-    test.run_program()
+    if len(sys.argv) < 2:
+        start_folder = Path.cwd()
+        test = FileNavigator(start_folder)
+        test.run_program()
+        os.chdir(test.root)
+        create_delete_file(test)
+    else:
+        d_object = Deleter()
+        d_object.read_file(sys.argv[1])
+        d_object.delete_from_list()
+        #print(d_object.deletion_list)   
+        #deleter.delete_files()
 
 if __name__=='__main__':
     main()
