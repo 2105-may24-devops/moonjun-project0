@@ -171,7 +171,7 @@ def main():
     else:
         d_object = Deleter()
         d_object.read_file(sys.argv[1])
-        print(d_object.deletion_list)
+        print(d_object.deletion_list)   #WIP. I can read delete fileA
         #deleter.delete_files()
 
 if __name__=='__main__':
