@@ -1,7 +1,7 @@
 from pathlib import Path
+from curses import ascii
 import curses
 import os
-
 
 class FileNavigator(object):
     UP = -1
@@ -24,7 +24,6 @@ class FileNavigator(object):
 
         self.w, self.h = self.stdscr.getmaxyx()
         self.min_row = 0
-        #
         self.max_row = 1000
         # Max number of rows of the terminal
         self.max_lines_per_page = curses.LINES
@@ -49,9 +48,15 @@ class FileNavigator(object):
             elif key == key in [10, 13]:
                 if Path.is_dir(Path(self.curr_dir).joinpath(self.menu[self.curr_row])):
                     self.change_directory()
-                elif Path.is_file(Path(self.curr_dir).joinpath(self.menu[self.curr_row])):
-                    selected = Path(self.curr_dir).joinpath(self.menu[self.curr_row])
-                    self.select_file(selected)
+            elif key == 100:
+                selected = Path(self.curr_dir).joinpath(self.menu[self.curr_row])
+                self.select_file(selected)
+
+                #if Path.is_file(selected):#Path(self.curr_dir).joinpath(self.menu[self.curr_row])):
+                #    #selected = Path(self.curr_dir).joinpath(self.menu[self.curr_row])
+                #    self.select_file(selected)
+                #elif Path.is_dir(selected):
+                #    self.select_dir(selected)
                 
             # Breaks out of fullscreen after pressing 'q'
             elif key == 113:
@@ -85,20 +90,29 @@ class FileNavigator(object):
     # curses.newwwin(nlines, ncol, begin_y, begin_x)
     # curses.addstr(y, x, str[,attr])
 
-    def select_file(self, file):
+    def select_file(self, selected):
+
         # Initialize new window for prompt.
         win = curses.newwin(2,self.h, self.w - 2, 0)
 
-        if str(file) not in self.to_delete:
-            self.to_delete.append(str(file))
-            win.addstr(0, 0, "File marked for deletion.")
-            win.addstr(1,0, "Press any key to continue.")
+        if Path.is_file(selected):
+            if str(selected) not in self.to_delete:
+                self.to_delete.append(str(selected))
+                win.addstr(0, 0, "File marked for deletion.")
+                win.addstr(1,0, "Press any key to continue.")
+            else:
+                self.to_delete.remove(str(selected))
+                win.addstr(0, 0, "File unmarked for deletion.")
+                win.addstr(1,0, "Press any key to continue.")
         else:
-            self.to_delete.remove(str(file))
-            win.addstr(0, 0, "File unmarked for deletion.")
-            win.addstr(1,0, "Press any key to continue.")
-
-        #create_delete_file(self)
+            if str(selected) not in self.to_delete:
+                self.to_delete.append(str(selected))
+                win.addstr(0, 0, "File marked for deletion.")
+                win.addstr(1,0, "Press any key to continue.")
+            else:
+                self.to_delete.remove(str(selected))
+                win.addstr(0, 0, "File unmarked for deletion.")
+                win.addstr(1,0, "Press any key to continue.")
 
         win.touchwin()
         win.refresh()
@@ -142,7 +156,6 @@ def create_delete_file(Object):
         Path.mkdir(Path(Object.root).joinpath('deletion'))
         os.chdir('./deletion')
         write_to_file_delete(Object)
-
     return
 
 def write_to_file_delete(Object):
