@@ -17,9 +17,3 @@ class ProjectLogging():
             file_object.write(i + '\n')
         file_object.close()
 
-#def main():
-#    d = datetime.now()
-#    d = re.sub("[^0-9]","", str(d))
-#    print(d)
-#if __name__ == '__main__':
-#    main()
