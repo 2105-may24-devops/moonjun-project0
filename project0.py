@@ -1,7 +1,5 @@
 from pathlib import Path
-from curses import ascii
 from deleter import Deleter
-import shutil
 import curses
 import sys
 import os
