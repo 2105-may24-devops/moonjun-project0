@@ -172,8 +172,6 @@ def main():
         d_object = Deleter()
         d_object.read_file(sys.argv[1])
         d_object.delete_from_list()
-        #print(d_object.deletion_list)   
-        #deleter.delete_files()
 
 if __name__=='__main__':
     main()
