@@ -1,0 +1,15 @@
+---
+- hosts: all
+  tasks:
+
+  - name: Get project0 files
+    ansible.builtin.git:
+      repo: https://github.com/2105-may24-devops/moonjun-project0.git
+      dest: ~/project0
+      single_branch: yes
+      version: master
+
+  - name: Create venv
+    command:
+      cmd: python3 -m venv ~/project0/venv
+      creates: "~/project0/venv"
