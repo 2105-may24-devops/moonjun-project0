@@ -5,6 +5,7 @@ import os
 
 class Deleter():
 
+    # Has only one property that holds the list of paths read from files-to-delete.txt
     def __init__(self):
 
         self.deletion_list = []
@@ -21,6 +22,7 @@ class Deleter():
         os.chdir('../')
         return
 
+    # Delete all paths in deletion_list and ask user for input.
     def delete_from_list(self):
         flag = input('Are you sure you want to delete? [Y/n]: ')
         if flag == 'Y':
@@ -42,6 +44,8 @@ class Deleter():
             print('Incorrect input. Try again.')
         return
 
+    # Deletes files and directories with the builtin Path or shutil modules.
+    # Dangerous. Please know what you are deleting.
     def delete_loop(self):
         for i in self.deletion_list:
             if Path.is_dir(Path(i)):

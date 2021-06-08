@@ -2,6 +2,7 @@ from datetime import datetime
 import re
 
 # Filename format: Y-M-D-H-m-s-ms
+# Creates a .txt file in the above format that logs which files were deleted.
 class ProjectLogging():
 
     def __init__(self):
