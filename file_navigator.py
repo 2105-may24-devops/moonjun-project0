@@ -222,14 +222,24 @@ def write_to_file_delete(Object: FileNavigator):
 
 def main():
     
-    if len(sys.argv) < 2:
-        start_folder = Path.cwd()
+    start_folder = Path.cwd()
+    d_object = Deleter()
+
+    # When program is called without any command line args.
+    if (len(sys.argv) == 1):
         test = FileNavigator(start_folder)
         test.run_program()
         os.chdir(test.ROOT)
         create_delete_file(test)
-    else:
-        d_object = Deleter()
+
+    # Program called with -d
+    elif (len(sys.argv) == 3) and (sys.argv[1] == '-d') and(sys.argv[2] == 'files-to-delete.txt'):
+        d_object.d_option = True
+        d_object.read_file(sys.argv[2])
+        d_object.delete_from_list()
+    
+    # Program called with .txt file
+    elif (len(sys.argv) == 2) and sys.argv[1] == 'files-to-delete.txt':
         d_object.read_file(sys.argv[1])
         d_object.delete_from_list()
 
