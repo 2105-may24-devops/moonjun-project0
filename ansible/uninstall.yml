@@ -1,0 +1,9 @@
+---
+- hosts: all
+  gather_facts: false
+  tasks:
+
+  - name: Uninstall the project
+    file:
+      state: absent
+      path: ~/p0
