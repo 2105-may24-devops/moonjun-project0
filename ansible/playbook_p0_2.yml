@@ -17,4 +17,4 @@
   
   - name: Creating dummy files
     command:
-      cmd: bash createdummies.sh
+      cmd: bash ~/p0/project0/ansible/create_dummies.sh

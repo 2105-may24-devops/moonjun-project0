@@ -7,8 +7,6 @@ import os
 class FileNavigator(object):
     UP = -1
     DOWN = 1
-    IN = 0
-    OUT = -2
 
     def __init__(self, directory):
         self.root = directory
