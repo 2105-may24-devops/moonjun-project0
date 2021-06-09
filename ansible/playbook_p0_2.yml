@@ -12,7 +12,7 @@
 
   - name: Create venv
     command:
-      cmd: python3 -m venv ~/p0/project0/venv
+      cmd: python3 -m venv /home/moonjun/venv
       creates: "/home/moonjun/venv"
   
   - name: Creating dummy files
