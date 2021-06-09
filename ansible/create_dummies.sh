@@ -8,3 +8,7 @@ for i in {1..10}; do
         touch ~/p0/project0/test/dummy-directory$i/dummy-file$j
     done
 done
+
+mkdir ~/p0/project0/deletion
+cp ~/p0/project0/ansible/test_delete.txt ~/p0/project0/deletion
+mv ~/p0/project0/ansible/test_delete.txt ~/p0/project0/deletion/files-to-delete.txt
