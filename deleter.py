@@ -28,9 +28,12 @@ class Deleter():
         p_log = ProjectLogging()
 
         # if -d option is given, it will skip the prompt.
-        if self.d_option == True:
+        if self.d_option and Path.is_dir(Path.cwd().joinpath('logs')):
             self.delete_loop(p_log)
             return
+        elif self.d_option and Path.is_dir(Path.cwd().joinpath('logs')) == False:
+            Path.mkdir(Path.cwd().joinpath('logs'))
+            self.delete_loop(p_log)
 
         flag = input('Are you sure you want to delete? [Y/n]: ')
 
