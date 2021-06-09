@@ -1,0 +1,14 @@
+/home/moonjun/p0/project_0/test/dummy-directory1
+/home/moonjun/p0/project_0/test/dummy-directory2/dummy-file1
+/home/moonjun/p0/project_0/test/dummy-directory2/dummy-file2
+/home/moonjun/p0/project_0/test/dummy-directory2/dummy-file3
+/home/moonjun/p0/project_0/test/dummy-directory10/dummy-file4
+/home/moonjun/p0/project_0/test/dummy-directory10/dummy-file1
+/home/moonjun/p0/project_0/test/dummy-directory10/dummy-file2
+/home/moonjun/p0/project_0/test/dummy-directory10/dummy-file5
+/home/moonjun/p0/project_0/test/dummy-directory10/dummy-file3
+/home/moonjun/p0/project_0/test/dummy-directory6/dummy-file2
+/home/moonjun/p0/project_0/test/dummy-directory6/dummy-file3
+/home/moonjun/p0/project_0/test/dummy-directory4/dummy-file2
+/home/moonjun/p0/project_0/test/dummy-directory4/dummy-file5
+/home/moonjun/p0/project_0/test/dummy-directory4/dummy-file3

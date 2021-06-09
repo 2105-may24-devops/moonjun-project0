@@ -1,0 +1,11 @@
+---
+- hosts: virtual_machines
+  gather_facts: false
+  tasks:
+    
+    - name: noninteractive delete
+      command:
+        chdir: /home/moonjun/p0/project0/
+        cmd: python3 file_navigator.py -d files-to-delete.txt
+      become: true
+      become_user: root

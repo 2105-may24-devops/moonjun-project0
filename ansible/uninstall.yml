@@ -1,9 +1,10 @@
 ---
-- hosts: all
+- hosts: virtual_machines
   gather_facts: false
+  become: true
   tasks:
 
   - name: Uninstall the project
     file:
       state: absent
-      path: ~/p0
+      path: /home/moonjun/p0

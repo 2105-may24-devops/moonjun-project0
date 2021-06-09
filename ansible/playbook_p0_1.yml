@@ -1,5 +1,5 @@
 ---
-- hosts: all
+- hosts: virtual_machines
   become: true
   tasks:
 
@@ -8,17 +8,17 @@
       update_cache: yes
 
   - name: install git
-    ansible.builtin.package:
+    package:
       name: git
       state: latest
       update_cache: yes
 
   - name: install python3
-    ansible.builtin.package:
+    package:
       name: python3
       update_cache: yes
 
   - name: install python3-venv
-    ansible.builtin.package:
+    package:
       name: python3-venv
       update_cache: yes

@@ -1,20 +1,20 @@
 ---
-- hosts: all
+- hosts: virtual_machines
   gather_facts: false
   tasks:
 
   - name: Get project0 files
-    ansible.builtin.git:
+    git:
       repo: https://github.com/2105-may24-devops/moonjun-project0.git
-      dest: ~/p0/project0
+      dest: /home/moonjun/p0/project0
       single_branch: yes
       version: master
 
   - name: Create venv
     command:
       cmd: python3 -m venv ~/p0/project0/venv
-      creates: "~/p0/project0/venv"
+      creates: "/home/moonjun/venv"
   
   - name: Creating dummy files
     command:
-      cmd: bash ~/p0/project0/ansible/create_dummies.sh
+      cmd: bash /home/moonjun/p0/project0/ansible/create_dummies.sh
