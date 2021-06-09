@@ -2,10 +2,22 @@
 - hosts: virtual_machines
   gather_facts: false
   tasks:
-    
-    - name: noninteractive delete
-      command:
-        chdir: /home/moonjun/p0/project0/
-        cmd: /home/moonjun/venv/bin/python3 file_navigator.py -d files-to-delete.txt
-      become: true
-      become_user: root
+
+  - name: noninteractive delete
+    command:
+      chdir: /home/moonjun/p0/project0/
+      cmd: /home/moonjun/venv/bin/python3 file_navigator.py -d files-to-delete.txt
+    become: true
+    become_user: root
+   
+  - name: check if folders were deleted.
+    file:
+      state: absent
+      path: "{{item}}"
+    with_items:
+      - ["/home/moonjun/p0/project0/test/dummy-directory1","/home/moonjun/p0/project0/test/dummy-directory2/dummy-file1","/home/moonjun/p0/project0/test/dummy-directory2/dummy-file2
+","/home/moonjun/p0/project0/test/dummy-directory2/dummy-file2
+","/home/moonjun/p0/project0/test/dummy-directory10/dummy-file4","/home/moonjun/p0/project0/test/dummy-directory10/dummy-file1","/home/moonjun/p0/project0/test/dummy-directory10/dummy-file2","/home/moonjun/p0/project0/test/dummy-directory10/dummy-file5","/home/moonjun/p0/project0/test/dummy-directory10/dummy-file3","/home/moonjun/p0/project0/test/dummy-directory6/dummy-file2","/home/moonjun/p0/project0/test/dummy-directory6/dummy-file3","/home/moonjun/p0/project0/test/dummy-directory4/dummy-file2","/home/moonjun/p0/project0/test/dummy-directory4/dummy-file5","/home/moonjun/p0/project0/test/dummy-directory4/dummy-file3"]
+
+      
+# Task to read file and check if directories were deleted.
