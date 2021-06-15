@@ -7,8 +7,8 @@
   - name: Uninstall the project
     file:
       state: absent
-      path: /home/moonjun/p0
+      path: "~/p0"
 
   - file:
       state: absent
-      path: /home/moonjun/venv
+      path: "~/venv"
