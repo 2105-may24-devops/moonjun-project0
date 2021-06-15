@@ -16,10 +16,11 @@
   - name: install python3
     package:
       name: python3
-      update_cache: yes
+      state: latest
+    become_user: root
 
   - name: install python3-venv
     package:
       name: python3-venv
       state: latest
-      update_cache: yes
+    become_user: root

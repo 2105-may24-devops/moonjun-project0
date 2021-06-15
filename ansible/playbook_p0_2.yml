@@ -14,8 +14,10 @@
   - name: Create venv
     command:
       cmd: python3 -m venv /home/moonjun/venv
-      creates: "/home/moonjun/venv"
+      creates: "~/venv"
   
   - name: Creating dummy files
     command:
-      cmd: bash /home/moonjun/p0/project0/ansible/create_dummies.sh
+      cmd: bash ~/p0/project0/ansible/create_dummies.sh
+
+# bash /home/moonjun/p0/project0/ansible/create_dummies.sh
