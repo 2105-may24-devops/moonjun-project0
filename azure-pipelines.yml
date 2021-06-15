@@ -31,9 +31,18 @@ steps:
 - task: Ansible@0
   inputs:
     ansibleInterface: 'agentMachine'
-    playbookPathOnAgentMachine: './ansible_test.yml'
+    playbookPathOnAgentMachine: './ansible/playbook_p0_2.yml'
     inventoriesAgentMachine: 'file'
     inventoryFileOnAgentMachine: './ansible/inventory'
+  displayName: 'Anisble - create venv and install dummy files'
+- task: Ansible@0
+  inputs:
+    ansibleInterface: 'agentMachine'
+    playbookPathOnAgentMachine: './ansible/ansible_test.yml'
+    inventoriesAgentMachine: 'file'
+    inventoryFileOnAgentMachine: './ansible/inventory'
+  displayName: 'Ansible - Run test'
+
 - task: InstallSSHKey@0
   inputs:
     knownHostsEntry: |
