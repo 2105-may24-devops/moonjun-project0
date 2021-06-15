@@ -1,5 +1,6 @@
 ---
 - hosts: virtual_machines
+  gather_facts: false
   become: true
   tasks:
 
