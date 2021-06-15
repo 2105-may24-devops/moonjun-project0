@@ -31,7 +31,7 @@ steps:
 - task: Ansible@0
   inputs:
     ansibleInterface: 'agentMachine'
-    playbookPathOnAgentMachine: './ansible'
+    playbookPathOnAgentMachine: './ansible_test.yml'
     inventoriesAgentMachine: 'file'
     inventoryFileOnAgentMachine: './ansible/inventory'
 - task: InstallSSHKey@0
