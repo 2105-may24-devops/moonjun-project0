@@ -6,9 +6,10 @@
   - name: Get project0 files
     git:
       repo: https://github.com/2105-may24-devops/moonjun-project0.git
-      dest: /home/moonjun/p0/project0
-      single_branch: yes
-      version: master
+      clone: yes
+      force: yes
+      dest: "~/p0/project0"
+      
 
   - name: Create venv
     command:
