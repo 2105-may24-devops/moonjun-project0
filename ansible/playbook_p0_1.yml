@@ -3,9 +3,9 @@
   become: true
   tasks:
 
-  - name: update repository
-    apt:
-      update_cache: yes
+  #- name: update repository
+  #  apt:
+  #    update_cache: yes
 
   - name: install git
     package:
