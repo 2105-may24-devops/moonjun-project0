@@ -1,6 +1,6 @@
 #! bin/bash
 
-if [! -d "~/p0/project0/test"]; then
+if [ ! -d "~/p0/project0/test" ]; then
     mkdir ~/p0/project0/test
 else
     rm -rf ~/p0/project0/test
@@ -14,6 +14,9 @@ for i in {1..10}; do
     done
 done
 
+
 mkdir ~/p0/project0/deletion
+
+
 cp ~/p0/project0/ansible/test_delete.txt ~/p0/project0/deletion
 mv ~/p0/project0/ansible/test_delete.txt ~/p0/project0/deletion/files-to-delete.txt
