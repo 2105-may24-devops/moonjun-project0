@@ -2,9 +2,9 @@
 
 if [! -d "~/p0/project0/test"]; then
     mkdir ~/p0/project0/test
-
 else
     rm -rf ~/p0/project0/test
+    mkdir ~/p0/project0/test
 fi
 
 for i in {1..10}; do
