@@ -28,6 +28,19 @@ steps:
     pip install -r requirements.txt
   displayName: 'Install dependencies'
 
+- task: SonarCloudPrepare@1
+  inputs:
+    SonarCloud: 'moonjun-sonar'
+    organization: '2105-may24-devops'
+    scannerMode: 'CLI'
+    configMode: 'file'
+
+- task: SonarCloudPublish@1
+  inputs:
+    pollingTimeoutSec: '300'
+
+- task: SonarCloudAnalyze@1
+
 - task: InstallSSHKey@0
   inputs:
     knownHostsEntry: |
