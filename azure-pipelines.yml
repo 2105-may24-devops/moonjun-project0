@@ -33,7 +33,9 @@ steps:
     SonarCloud: 'moonjun-sonar'
     organization: '2105-may24-devops'
     scannerMode: 'CLI'
-    configMode: 'file'
+    configMode: 'manual'
+    cliProjectKey: 'revature-training-uta_moonjun-p0'
+    cliSources: '.'
 
 - task: SonarCloudPublish@1
   inputs:
