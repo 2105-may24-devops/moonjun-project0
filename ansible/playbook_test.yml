@@ -1,5 +1,5 @@
 ---
-- hosts: virtual_machines
+- hosts: revature
   gather_facts: false
   tasks:
 
