@@ -103,18 +103,18 @@ stages:
     - task: Ansible@0
       inputs:
         ansibleInterface: 'agentMachine'
-        playbookPathOnAgentMachine: './ansible/playbook_p0_1.yml'
+        playbookPathOnAgentMachine: '$(Build.ArtifactStagingDirectory)/drop-3.6/ansible//ansible/playbook_p0_1.yml'
         inventoriesAgentMachine: 'file'
-        inventoryFileOnAgentMachine: './ansible/inventory.yml'
+        inventoryFileOnAgentMachine: '$(Build.ArtifactStagingDirectory)/drop-3.6/ansible//ansible/inventory.yml'
         args: '-l development --extra-vars "ansible_python_interpreter=/usr/bin/python3 deprecation_warnings=True"'
       displayName: 'Ansible - Install'
 
     - task: Ansible@0
       inputs:
         ansibleInterface: 'agentMachine'
-        playbookPathOnAgentMachine: './ansible/playbook_p0_2.yml'
+        playbookPathOnAgentMachine: '$(Build.ArtifactStagingDirectory)/drop-3.6/ansible//ansible/playbook_p0_2.yml'
         inventoriesAgentMachine: 'file'
-        inventoryFileOnAgentMachine: './ansible/inventory.yml'
+        inventoryFileOnAgentMachine: '$(Build.ArtifactStagingDirectory)/drop-3.6/ansible//ansible/inventory.yml'
         args: '-l development --extra-vars "ansible_python_interpreter=/usr/bin/python3 deprecation_warnings=True"'
       displayName: 'Anisble - create venv and install dummy files'
 
@@ -146,6 +146,14 @@ stages:
   - job: Deploy
     displayName: Deploy to VM
     steps:
+
+    - task: DownloadBuildArtifacts@1
+      inputs:
+        buildType: 'current'
+        downloadType: 'single'
+        artifactName: 'drop-$(pythonVersion)'
+        downloadPath: '$(Build.ArtifactStagingDirectory)'
+        
     - task: InstallSSHKey@0
       inputs:
         knownHostsEntry: |
@@ -159,17 +167,17 @@ stages:
     - task: Ansible@0
       inputs:
         ansibleInterface: 'agentMachine'
-        playbookPathOnAgentMachine: './ansible/playbook_p0_1.yml'
+        playbookPathOnAgentMachine: '$(Build.ArtifactStagingDirectory)/drop-3.6/ansible//ansible/playbook_p0_1.yml'
         inventoriesAgentMachine: 'file'
-        inventoryFileOnAgentMachine: './ansible/inventory.yml'
+        inventoryFileOnAgentMachine: '$(Build.ArtifactStagingDirectory)/drop-3.6/ansible//ansible/inventory.yml'
         args: '-l production --extra-vars "ansible_python_interpreter=/usr/bin/python3 deprecation_warnings=True"'
       displayName: 'Ansible - Install'
 
     - task: Ansible@0
       inputs:
         ansibleInterface: 'agentMachine'
-        playbookPathOnAgentMachine: './ansible/playbook_p0_2.yml'
+        playbookPathOnAgentMachine: '$(Build.ArtifactStagingDirectory)/drop-3.6/ansible//ansible/playbook_p0_2.yml'
         inventoriesAgentMachine: 'file'
-        inventoryFileOnAgentMachine: './ansible/inventory.yml'
+        inventoryFileOnAgentMachine: '$(Build.ArtifactStagingDirectory)/drop-3.6/ansible//ansible/inventory.yml'
         args: '-l production --extra-vars "ansible_python_interpreter=/usr/bin/python3 deprecation_warnings=True"'
       displayName: 'Anisble - create venv and install dummy files'
