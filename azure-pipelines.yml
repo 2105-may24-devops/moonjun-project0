@@ -24,8 +24,8 @@ stages:
     - checkout: self
     - task: UsePythonVersion@0
       inputs:
-        versionSpec: '$(python.version)'
-      displayName: 'Use Python $(python.version)'
+        versionSpec: '$(pythonVersion)'
+      displayName: 'Use Python $(pythonVersion)'
 
     - task: CmdLine@2
       displayName: 'Install dependencies'
