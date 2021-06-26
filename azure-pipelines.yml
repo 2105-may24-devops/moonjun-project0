@@ -137,7 +137,7 @@ stages:
 - stage: Production
   displayName: Deploy to production
   dependsOn:
-  - SonarCloud
+  - Testing
   - Development
   jobs:
   - deployment: production
