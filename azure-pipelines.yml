@@ -19,7 +19,7 @@ stages:
   - job: Dependencies
     displayName: Install Dependencies
     pool:
-      vmImage: ubuntu-16.04
+      vmImage: ubuntu-latest
     steps:
     - checkout: self
     - task: UsePythonVersion@0
@@ -53,7 +53,7 @@ stages:
   - job: SonarCloud
     displayName: Static Analysis
     pool:
-      vmImage: ubuntu-16.04 
+      vmImage: ubuntu-latest
 
     steps: 
     - task: SonarCloudPrepare@1
@@ -76,6 +76,9 @@ stages:
   jobs:
   - deployment: development
     environment: moonjun-vm
+    pool:
+      vmImage: ubuntu-latest
+      
   - job: Deploy
     displayName: Deploy to VM
     steps:
@@ -95,7 +98,7 @@ stages:
         playbookPathOnAgentMachine: './ansible/playbook_p0_1.yml'
         inventoriesAgentMachine: 'file'
         inventoryFileOnAgentMachine: './ansible/inventory.yml'
-        args: '-l development --extra-vars "ansible_python_interpreter=/usr/bin/python3 deprecation_warnings=True'
+        args: '-l development --extra-vars "ansible_python_interpreter=/usr/bin/python3 deprecation_warnings=True"'
       displayName: 'Ansible - Install'
 
     - task: Ansible@0
@@ -104,7 +107,7 @@ stages:
         playbookPathOnAgentMachine: './ansible/playbook_p0_2.yml'
         inventoriesAgentMachine: 'file'
         inventoryFileOnAgentMachine: './ansible/inventory.yml'
-        args: '-l development --extra-vars "ansible_python_interpreter=/usr/bin/python3 deprecation_warnings=True'
+        args: '-l development --extra-vars "ansible_python_interpreter=/usr/bin/python3 deprecation_warnings=True"'
       displayName: 'Anisble - create venv and install dummy files'
 
     - task: Ansible@0
@@ -113,8 +116,23 @@ stages:
         playbookPathOnAgentMachine: './ansible/playbook_test.yml'
         inventoriesAgentMachine: 'file'
         inventoryFileOnAgentMachine: './ansible/inventory.yml'
-        args: '-l development --extra-vars "ansible_python_interpreter=/usr/bin/python3 deprecation_warnings=True'
+        args: '-l development --extra-vars "ansible_python_interpreter=/usr/bin/python3 deprecation_warnings=True"'
       displayName: 'Ansible - Run test'
+
+- stage: Testing
+  dependsOn: SonarCloud
+  jobs:
+  - job: test
+    pool:
+      vmImage: ubuntu-latest
+    steps: 
+    - task: CmdLine@2
+      displayName: Serious Tests
+      inputs:
+        script: |
+          echo Very serious tests going on here
+          
+          echo Hello world
 
 - stage: Production
   displayName: Deploy to production
@@ -124,6 +142,8 @@ stages:
   jobs:
   - deployment: production
     environment: production
+    pool:
+      vmImage: ubuntu-latest
   - job: Deploy
     displayName: Deploy to VM
     steps:
@@ -143,7 +163,7 @@ stages:
         playbookPathOnAgentMachine: './ansible/playbook_p0_1.yml'
         inventoriesAgentMachine: 'file'
         inventoryFileOnAgentMachine: './ansible/inventory.yml'
-        args: '-l production --extra-vars "ansible_python_interpreter=/usr/bin/python3 deprecation_warnings=True'
+        args: '-l production --extra-vars "ansible_python_interpreter=/usr/bin/python3 deprecation_warnings=True"'
       displayName: 'Ansible - Install'
 
     - task: Ansible@0
@@ -152,7 +172,7 @@ stages:
         playbookPathOnAgentMachine: './ansible/playbook_p0_2.yml'
         inventoriesAgentMachine: 'file'
         inventoryFileOnAgentMachine: './ansible/inventory.yml'
-        args: '-l production --extra-vars "ansible_python_interpreter=/usr/bin/python3 deprecation_warnings=True'
+        args: '-l production --extra-vars "ansible_python_interpreter=/usr/bin/python3 deprecation_warnings=True"'
       displayName: 'Anisble - create venv and install dummy files'
 
     - task: Ansible@0
@@ -161,5 +181,5 @@ stages:
         playbookPathOnAgentMachine: './ansible/playbook_test.yml'
         inventoriesAgentMachine: 'file'
         inventoryFileOnAgentMachine: './ansible/inventory.yml'
-        args: '-l production --extra-vars "ansible_python_interpreter=/usr/bin/python3 deprecation_warnings=True'
+        args: '-l production --extra-vars "ansible_python_interpreter=/usr/bin/python3 deprecation_warnings=True"'
       displayName: 'Ansible - Run test'
