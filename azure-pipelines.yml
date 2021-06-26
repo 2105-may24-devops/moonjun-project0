@@ -9,12 +9,8 @@ trigger:
 pool:
   vmImage: ubuntu-latest
   
-  strategy:
-    matrix:
-      Python36:
-        python.version: '3.6'
-      Python37:
-        python.version: '3.7'
+variables:
+  pythonVersion: 3.6
 
 stages:
 - stage: Publish
@@ -49,9 +45,9 @@ stages:
         TargetFolder: '$(Build.ArtifactStagingDirectory)'
 
     - task: PublishBuildArtifacts@1
-      displayName: 'Publish Artifact: drop-$(python.version)'
+      displayName: 'Publish Artifact: drop-$(pythonVersion)'
       inputs:
-        ArtifactName: 'drop-$(python.version)'
+        ArtifactName: 'drop-$(pythonVersion)'
 
 - stage: SonarCloud
   dependsOn: Publish
