@@ -1,8 +1,19 @@
-[virtual_machines] 
-104.215.72.107 ansible_ssh_private_key_file=~/.ssh/2105-may24-devops-ubuntu-vm-1_key.pem ansible_user=moonjun
-20.97.12.217 ansible_ssh_private_key_file=~/.ssh/2105-may24-devops-ubuntu-vm-1_key.pem ansible_user=moonjun
-13.84.166.27 ansible_ssh_private_key_file=~/.ssh/2105-may24-devops-ubuntu-vm-1_key.pem ansible_user=moonjun
-13.66.8.112 ansible_ssh_private_key_file=~/.ssh/2105-may24-devops-ubuntu-vm-1_key.pem ansible_user=moonjun
-
-[virtual_machines:vars]
-ansible_python_interpreter=/usr/bin/python3
+all:
+  children:
+    revature:
+      hosts:
+        VM3:
+          ansible_host: 20.97.12.217
+        VM5:
+          ansible_host: 13.66.8.112
+    development:
+      hosts:
+        VM3:
+          ansible_host: 20.97.12.217
+    production:
+      hosts:
+        VM5:
+          ansible_host: 13.66.8.112
+  vars:
+    ansible_ssh_private_key_file: ~/.ssh/2105-may24-devops-ubuntu-vm-1_key.pem
+    ansible_user: moonjun
