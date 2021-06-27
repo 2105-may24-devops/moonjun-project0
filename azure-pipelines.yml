@@ -82,12 +82,6 @@ stages:
   - job: Deploy
     displayName: Deploy to VM
     steps:
-    - task: DownloadBuildArtifacts@1
-      inputs:
-        buildType: 'current'
-        downloadType: 'single'
-        artifactName: 'drop-$(pythonVersion)'
-        downloadPath: '$(Build.ArtifactStagingDirectory)'
 
     - task: InstallSSHKey@0
       inputs:
@@ -112,9 +106,9 @@ stages:
     - task: Ansible@0
       inputs:
         ansibleInterface: 'agentMachine'
-        playbookPathOnAgentMachine: '$(Pipeline.Workspace)/drop-$(pythonVersion)/a/ansible/playbook_p0_2.yml'
+        playbookPathOnAgentMachine: '$(Pipeline.Workspace)/drop-$(pythonVersion)/ansible/playbook_p0_2.yml'
         inventoriesAgentMachine: 'file'
-        inventoryFileOnAgentMachine: '$(Pipeline.Workspace)/drop-$(pythonVersion)/a/ansible/inventory.yml'
+        inventoryFileOnAgentMachine: '$(Pipeline.Workspace)/drop-$(pythonVersion)/ansible/inventory.yml'
         args: '-l development --extra-vars "ansible_python_interpreter=/usr/bin/python3 deprecation_warnings=True"'
       displayName: 'Anisble - create venv and install dummy files'
 
@@ -167,7 +161,7 @@ stages:
     - task: Ansible@0
       inputs:
         ansibleInterface: 'agentMachine'
-        playbookPathOnAgentMachine: '$(Pipeline.Workspace)/drop-$(pythonVersion)/a/ansible/playbook_p0_1.yml'
+        playbookPathOnAgentMachine: '$(Pipeline.Workspace)/drop-$(pythonVersion)/ansible/playbook_p0_1.yml'
         inventoriesAgentMachine: 'file'
         inventoryFileOnAgentMachine: '$(Pipeline.Workspace)/drop-$(pythonVersion)/ansible/inventory.yml'
         args: '-l production --extra-vars "ansible_python_interpreter=/usr/bin/python3 deprecation_warnings=True"'
@@ -176,8 +170,8 @@ stages:
     - task: Ansible@0
       inputs:
         ansibleInterface: 'agentMachine'
-        playbookPathOnAgentMachine: '$(Pipeline.Workspace)/drop-$(pythonVersion)/a/ansible/playbook_p0_2.yml'
+        playbookPathOnAgentMachine: '$(Pipeline.Workspace)/drop-$(pythonVersion)/ansible/playbook_p0_2.yml'
         inventoriesAgentMachine: 'file'
-        inventoryFileOnAgentMachine: '$(Pipeline.Workspace)/drop-$(pythonVersion)/a/ansible/inventory.yml'
+        inventoryFileOnAgentMachine: '$(Pipeline.Workspace)/drop-$(pythonVersion)/ansible/inventory.yml'
         args: '-l production --extra-vars "ansible_python_interpreter=/usr/bin/python3 deprecation_warnings=True"'
       displayName: 'Anisble - create venv and install dummy files'
