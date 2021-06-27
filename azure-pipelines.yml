@@ -41,17 +41,11 @@ stages:
           requirements.txt
           ansible/**
         TargetFolder: '$(Build.ArtifactStagingDirectory)'
+        
     - task: PublishPipelineArtifact@1
       inputs:
         targetPath: '$(Pipeline.Workspace)'
         artifact: 'drop-$(pythonVersion)'
-
-    - task: PublishBuildArtifacts@1
-      displayName: 'Publish Artifact: drop-$(pythonVersion)'
-      inputs:
-        PathtoPublish: '$(Build.ArtifactStagingDirectory)'
-        ArtifactName: 'drop-$(pythonVersion)'
-        publishLocation: 'Container'
 
 - stage: SonarCloud
   dependsOn: Publish
