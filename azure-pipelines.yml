@@ -33,14 +33,14 @@ stages:
         script: python -m pip install --upgrade pip && pip install -r requirements.txt
 
     - task: CopyFiles@2
-      displayName: 'Copy Files to: $(Build.ArtifactStagingDirectory)'
+      displayName: 'Copy Files to: $(Pipeline.Workspace)'
       inputs:
         SourceFolder: '$(System.DefaultWorkingDirectory)'
         Contents: |
           *.py
           requirements.txt
           ansible/**
-        TargetFolder: '$(Build.ArtifactStagingDirectory)'
+        TargetFolder: '$(Pipeline.Workspace)'
         
     - task: PublishPipelineArtifact@1
       inputs:
