@@ -11,7 +11,7 @@ steps:
     playbookPathOnAgentMachine: '$(Agent.BuildDirectory)/drop-$(pythonVersion)/ansible/playbook_p0_1.yml'
     inventoriesAgentMachine: 'file'
     inventoryFileOnAgentMachine: '$(Agent.BuildDirectory)/drop-$(pythonVersion)/ansible/inventory.yml'
-    args: '${{ paramters.args }}'
+    args: '${{ parameters.args }}'
   displayName: 'Ansible - Install'
   
 - task: Ansible@0
@@ -20,5 +20,5 @@ steps:
     playbookPathOnAgentMachine: '$(Agent.BuildDirectory)/drop-$(pythonVersion)/ansible/playbook_p0_2.yml'
     inventoriesAgentMachine: 'file'
     inventoryFileOnAgentMachine: '$(Agent.BuildDirectory)/drop-$(pythonVersion)/ansible/inventory.yml'
-    args: '${{ paramters.args }}'
+    args: '${{ parameters.args }}'
   displayName: 'Anisble - create venv and install dummy files'
