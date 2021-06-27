@@ -75,42 +75,42 @@ stages:
   dependsOn: SonarCloud
   jobs:
   - deployment: development
+    displayName: Deploy to development
     environment: moonjun-vm
     pool:
       vmImage: ubuntu-latest
+    strategy:
+      runOnce:
+        deploy:
+          steps: 
+          - task: InstallSSHKey@0
+            inputs:
+              knownHostsEntry: |
+                |1|tmzibrD6nZfT5wQoehEuv5kYp9I=|8L7j+3XDBxHe25fb5qve79/HyC4= ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBLP9SkKMe2QK5e4IzLNCvQtDJ06ofyC7rbGHbU6/pye2c+Db+YxnKoMmQVLYIU6F416jFrXbq9IRbcpZXygywc8=
+                |1|ZoKXQCehwLebOXz2PvINH+GRCtk=|dEUGqk5N99g/yqdDdJdqfNIzfKw= ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBBol0BBG7Ah1dEgciEgRkqJ3tnLSOPHGKJtPlhM1yeiQAl3I4OIhTvY+EzMUS4hz/TppuiG6iHxlaU1D814MWC4=
+                |1|sfHTYwRnviYhbuza2S0khKyHsk8=|ORd3W9JLidlDqunAIEDyxB29b14= ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBFAZU4nQNS6lNWqiFzoQ4pjTSmsGyxWmyoZS7pzSWooaua/yV9JDou49KuhCzZakpP/PY0WfTxbo/KrZM+ESW+Q=
+                |1|aT1lKmV3r5+2X3uvdrsLKkMySnw=|p46U9E1mhsndCt9SmV2k+F2LRPQ= ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBD/ijCrZ+LcL4gEv5Y0K7/h1/QNY85jbQGXZK6SNKSAIaO2HlZsirragLXPLeZrIHWqj8idSCGf8uaU16D1xwy4=
+                |1|r4b3T5Ql9Nfajp7rt3mOb0HWmVw=|YNXvpXAPU30AdviZA8sGBjyXKcM= ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBB8uiPgYsAfhZo9tzfam2hbv7G1TUF4hk0jzrxO/SjLO2qBpMrlDaQvQWYZI3kdNT1xgFHFKSXcyaPElszq3tqU=
+              sshKeySecureFile: '2105-may24-devops-ubuntu-vm-1_key.pem'
+          - script: ls $(Build.ArtifactStagingDirectory)
+          - script: ls $(System.DefaultWorkingDirectory)
+          - task: Ansible@0
+            inputs:
+              ansibleInterface: 'agentMachine'
+              playbookPathOnAgentMachine: '$(Pipeline.Workspace)/drop-$(pythonVersion)/ansible/playbook_p0_1.yml'
+              inventoriesAgentMachine: 'file'
+              inventoryFileOnAgentMachine: '$(Pipeline.Workspace)/drop-$(pythonVersion)/ansible/inventory.yml'
+              args: '-l development --extra-vars "ansible_python_interpreter=/usr/bin/python3 deprecation_warnings=True"'
+            displayName: 'Ansible - Install'
       
-  - job: Deploy
-    displayName: Deploy to VM
-    steps:
-
-    - task: InstallSSHKey@0
-      inputs:
-        knownHostsEntry: |
-          |1|tmzibrD6nZfT5wQoehEuv5kYp9I=|8L7j+3XDBxHe25fb5qve79/HyC4= ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBLP9SkKMe2QK5e4IzLNCvQtDJ06ofyC7rbGHbU6/pye2c+Db+YxnKoMmQVLYIU6F416jFrXbq9IRbcpZXygywc8=
-          |1|ZoKXQCehwLebOXz2PvINH+GRCtk=|dEUGqk5N99g/yqdDdJdqfNIzfKw= ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBBol0BBG7Ah1dEgciEgRkqJ3tnLSOPHGKJtPlhM1yeiQAl3I4OIhTvY+EzMUS4hz/TppuiG6iHxlaU1D814MWC4=
-          |1|sfHTYwRnviYhbuza2S0khKyHsk8=|ORd3W9JLidlDqunAIEDyxB29b14= ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBFAZU4nQNS6lNWqiFzoQ4pjTSmsGyxWmyoZS7pzSWooaua/yV9JDou49KuhCzZakpP/PY0WfTxbo/KrZM+ESW+Q=
-          |1|aT1lKmV3r5+2X3uvdrsLKkMySnw=|p46U9E1mhsndCt9SmV2k+F2LRPQ= ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBD/ijCrZ+LcL4gEv5Y0K7/h1/QNY85jbQGXZK6SNKSAIaO2HlZsirragLXPLeZrIHWqj8idSCGf8uaU16D1xwy4=
-          |1|r4b3T5Ql9Nfajp7rt3mOb0HWmVw=|YNXvpXAPU30AdviZA8sGBjyXKcM= ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBB8uiPgYsAfhZo9tzfam2hbv7G1TUF4hk0jzrxO/SjLO2qBpMrlDaQvQWYZI3kdNT1xgFHFKSXcyaPElszq3tqU=
-        sshKeySecureFile: '2105-may24-devops-ubuntu-vm-1_key.pem'
-    - script: ls $(Build.ArtifactStagingDirectory)
-    - script: ls $(System.DefaultWorkingDirectory)
-    - task: Ansible@0
-      inputs:
-        ansibleInterface: 'agentMachine'
-        playbookPathOnAgentMachine: '$(Pipeline.Workspace)/drop-$(pythonVersion)/ansible/playbook_p0_1.yml'
-        inventoriesAgentMachine: 'file'
-        inventoryFileOnAgentMachine: '$(Pipeline.Workspace)/drop-$(pythonVersion)/a/ansible/inventory.yml'
-        args: '-l development --extra-vars "ansible_python_interpreter=/usr/bin/python3 deprecation_warnings=True"'
-      displayName: 'Ansible - Install'
-
-    - task: Ansible@0
-      inputs:
-        ansibleInterface: 'agentMachine'
-        playbookPathOnAgentMachine: '$(Pipeline.Workspace)/drop-$(pythonVersion)/ansible/playbook_p0_2.yml'
-        inventoriesAgentMachine: 'file'
-        inventoryFileOnAgentMachine: '$(Pipeline.Workspace)/drop-$(pythonVersion)/ansible/inventory.yml'
-        args: '-l development --extra-vars "ansible_python_interpreter=/usr/bin/python3 deprecation_warnings=True"'
-      displayName: 'Anisble - create venv and install dummy files'
+          - task: Ansible@0
+            inputs:
+              ansibleInterface: 'agentMachine'
+              playbookPathOnAgentMachine: '$(Pipeline.Workspace)/drop-$(pythonVersion)/ansible/playbook_p0_2.yml'
+              inventoriesAgentMachine: 'file'
+              inventoryFileOnAgentMachine: '$(Pipeline.Workspace)/drop-$(pythonVersion)/ansible/inventory.yml'
+              args: '-l development --extra-vars "ansible_python_interpreter=/usr/bin/python3 deprecation_warnings=True"'
+            displayName: 'Anisble - create venv and install dummy files'
 
 - stage: Testing
   dependsOn: SonarCloud
@@ -137,41 +137,43 @@ stages:
     environment: production
     pool:
       vmImage: ubuntu-latest
-  - job: Deploy
-    displayName: Deploy to VM
-    steps:
+    strategy:
+      runOnce:
+        deploy:
+          steps:
 
-    - task: DownloadBuildArtifacts@1
-      inputs:
-        buildType: 'current'
-        downloadType: 'single'
-        artifactName: 'drop-$(pythonVersion)'
-        downloadPath: '$(Build.ArtifactStagingDirectory)'
-        
-    - task: InstallSSHKey@0
-      inputs:
-        knownHostsEntry: |
-          |1|tmzibrD6nZfT5wQoehEuv5kYp9I=|8L7j+3XDBxHe25fb5qve79/HyC4= ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBLP9SkKMe2QK5e4IzLNCvQtDJ06ofyC7rbGHbU6/pye2c+Db+YxnKoMmQVLYIU6F416jFrXbq9IRbcpZXygywc8=
-          |1|ZoKXQCehwLebOXz2PvINH+GRCtk=|dEUGqk5N99g/yqdDdJdqfNIzfKw= ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBBol0BBG7Ah1dEgciEgRkqJ3tnLSOPHGKJtPlhM1yeiQAl3I4OIhTvY+EzMUS4hz/TppuiG6iHxlaU1D814MWC4=
-          |1|sfHTYwRnviYhbuza2S0khKyHsk8=|ORd3W9JLidlDqunAIEDyxB29b14= ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBFAZU4nQNS6lNWqiFzoQ4pjTSmsGyxWmyoZS7pzSWooaua/yV9JDou49KuhCzZakpP/PY0WfTxbo/KrZM+ESW+Q=
-          |1|aT1lKmV3r5+2X3uvdrsLKkMySnw=|p46U9E1mhsndCt9SmV2k+F2LRPQ= ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBD/ijCrZ+LcL4gEv5Y0K7/h1/QNY85jbQGXZK6SNKSAIaO2HlZsirragLXPLeZrIHWqj8idSCGf8uaU16D1xwy4=
-          |1|r4b3T5Ql9Nfajp7rt3mOb0HWmVw=|YNXvpXAPU30AdviZA8sGBjyXKcM= ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBB8uiPgYsAfhZo9tzfam2hbv7G1TUF4hk0jzrxO/SjLO2qBpMrlDaQvQWYZI3kdNT1xgFHFKSXcyaPElszq3tqU=
-        sshKeySecureFile: '2105-may24-devops-ubuntu-vm-1_key.pem'
-
-    - task: Ansible@0
-      inputs:
-        ansibleInterface: 'agentMachine'
-        playbookPathOnAgentMachine: '$(Pipeline.Workspace)/drop-$(pythonVersion)/ansible/playbook_p0_1.yml'
-        inventoriesAgentMachine: 'file'
-        inventoryFileOnAgentMachine: '$(Pipeline.Workspace)/drop-$(pythonVersion)/ansible/inventory.yml'
-        args: '-l production --extra-vars "ansible_python_interpreter=/usr/bin/python3 deprecation_warnings=True"'
-      displayName: 'Ansible - Install'
-
-    - task: Ansible@0
-      inputs:
-        ansibleInterface: 'agentMachine'
-        playbookPathOnAgentMachine: '$(Pipeline.Workspace)/drop-$(pythonVersion)/ansible/playbook_p0_2.yml'
-        inventoriesAgentMachine: 'file'
-        inventoryFileOnAgentMachine: '$(Pipeline.Workspace)/drop-$(pythonVersion)/ansible/inventory.yml'
-        args: '-l production --extra-vars "ansible_python_interpreter=/usr/bin/python3 deprecation_warnings=True"'
-      displayName: 'Anisble - create venv and install dummy files'
+          - task: DownloadBuildArtifacts@1
+            inputs:
+              buildType: 'current'
+              downloadType: 'single'
+              artifactName: 'drop-$(pythonVersion)'
+              downloadPath: '$(Build.ArtifactStagingDirectory)'
+              
+          - task: InstallSSHKey@0
+            inputs:
+              knownHostsEntry: |
+                |1|tmzibrD6nZfT5wQoehEuv5kYp9I=|8L7j+3XDBxHe25fb5qve79/HyC4= ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBLP9SkKMe2QK5e4IzLNCvQtDJ06ofyC7rbGHbU6/pye2c+Db+YxnKoMmQVLYIU6F416jFrXbq9IRbcpZXygywc8=
+                |1|ZoKXQCehwLebOXz2PvINH+GRCtk=|dEUGqk5N99g/yqdDdJdqfNIzfKw= ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBBol0BBG7Ah1dEgciEgRkqJ3tnLSOPHGKJtPlhM1yeiQAl3I4OIhTvY+EzMUS4hz/TppuiG6iHxlaU1D814MWC4=
+                |1|sfHTYwRnviYhbuza2S0khKyHsk8=|ORd3W9JLidlDqunAIEDyxB29b14= ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBFAZU4nQNS6lNWqiFzoQ4pjTSmsGyxWmyoZS7pzSWooaua/yV9JDou49KuhCzZakpP/PY0WfTxbo/KrZM+ESW+Q=
+                |1|aT1lKmV3r5+2X3uvdrsLKkMySnw=|p46U9E1mhsndCt9SmV2k+F2LRPQ= ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBD/ijCrZ+LcL4gEv5Y0K7/h1/QNY85jbQGXZK6SNKSAIaO2HlZsirragLXPLeZrIHWqj8idSCGf8uaU16D1xwy4=
+                |1|r4b3T5Ql9Nfajp7rt3mOb0HWmVw=|YNXvpXAPU30AdviZA8sGBjyXKcM= ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBB8uiPgYsAfhZo9tzfam2hbv7G1TUF4hk0jzrxO/SjLO2qBpMrlDaQvQWYZI3kdNT1xgFHFKSXcyaPElszq3tqU=
+              sshKeySecureFile: '2105-may24-devops-ubuntu-vm-1_key.pem'
+      
+          - task: Ansible@0
+            inputs:
+              ansibleInterface: 'agentMachine'
+              playbookPathOnAgentMachine: '$(Pipeline.Workspace)/drop-$(pythonVersion)/ansible/playbook_p0_1.yml'
+              inventoriesAgentMachine: 'file'
+              inventoryFileOnAgentMachine: '$(Pipeline.Workspace)/drop-$(pythonVersion)/ansible/inventory.yml'
+              args: '-l production --extra-vars "ansible_python_interpreter=/usr/bin/python3 deprecation_warnings=True"'
+            displayName: 'Ansible - Install'
+      
+          - task: Ansible@0
+            inputs:
+              ansibleInterface: 'agentMachine'
+              playbookPathOnAgentMachine: '$(Pipeline.Workspace)/drop-$(pythonVersion)/ansible/playbook_p0_2.yml'
+              inventoriesAgentMachine: 'file'
+              inventoryFileOnAgentMachine: '$(Pipeline.Workspace)/drop-$(pythonVersion)/ansible/inventory.yml'
+              args: '-l production --extra-vars "ansible_python_interpreter=/usr/bin/python3 deprecation_warnings=True"'
+            displayName: 'Anisble - create venv and install dummy files'
+      
