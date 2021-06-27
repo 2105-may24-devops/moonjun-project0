@@ -93,7 +93,9 @@ stages:
             inputs:
               knownHostsEntry: $(known-hosts)
               sshKeySecureFile: '2105-may24-devops-ubuntu-vm-1_key.pem'
-              
+          - script: ls $(Build.ArtifactStagingDirectory)
+          - script: ls $(System.DefaultWorkingDirectory)
+          - script: ls $(System.ArtifactsDirectory)
           - task: Ansible@0
             inputs:
               ansibleInterface: 'agentMachine'
