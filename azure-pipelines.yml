@@ -90,11 +90,11 @@ stages:
         deploy:
           steps: 
 
-          - template: ssh-install.yml
+          - template: azure_templates/ssh-install.yml
             parameters:
               ssh_key: $(sshKey)
 
-          - template: ansible-app-install.yml
+          - template: azure_templates/ansible-app-install.yml
             parameters:
               ansible_interface: $(ansibleLocation)
               args: $(ansibleDevelopment)
@@ -123,11 +123,11 @@ stages:
         deploy:
           steps:
               
-          - template: ssh-install.yml
+          - template: azure_templates/ssh-install.yml
             parameters:
               ssh_key: $(sshKey)
       
-          - template: ansible-app-install.yml
+          - template: azure_templates/ansible-app-install.yml
             parameters:
               ansible_interface: $(ansibleLocation)
               args: $(ansibleProduction)
