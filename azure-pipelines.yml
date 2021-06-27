@@ -4,13 +4,15 @@
 # https://docs.microsoft.com/azure/devops/pipelines/languages/python
 
 trigger:
-- none
+- master
 
 pool:
   vmImage: ubuntu-latest
   
 variables:
   pythonVersion: 3.6
+  vmImage: 'ubuntu-latest'
+  appDirectory: .
   sshKey: '2105-may24-devops-ubuntu-vm-1_key.pem'
   ansibleLocation: 'agentMachine'
   ansibleDevelopment: '-l development'
@@ -23,7 +25,7 @@ stages:
   - job: Dependencies
     displayName: Install Dependencies
     pool:
-      vmImage: ubuntu-latest
+      vmImage: $(vmImage)
     steps:
     - checkout: self
     - task: UsePythonVersion@0
@@ -57,7 +59,7 @@ stages:
   - job: SonarCloud
     displayName: Static Analysis
     pool:
-      vmImage: ubuntu-latest
+      vmImage: $(vmImage)
 
     steps: 
     - task: SonarCloudPrepare@1
@@ -82,7 +84,7 @@ stages:
     displayName: Deploy to development
     environment: moonjun-vm
     pool:
-      vmImage: ubuntu-latest
+      vmImage: $(vmImage)
     strategy:
       runOnce:
         deploy:
@@ -102,7 +104,7 @@ stages:
   jobs:
   - job: Test
     pool:
-      vmImage: ubuntu-latest
+      vmImage: $(vmImage)
     steps:
     - script: echo 'This was tested.'
 
@@ -115,7 +117,7 @@ stages:
   - deployment: production
     environment: production
     pool:
-      vmImage: ubuntu-latest
+      vmImage: $(vmImage)
     strategy:
       runOnce:
         deploy:
