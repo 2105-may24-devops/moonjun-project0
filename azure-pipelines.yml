@@ -97,7 +97,7 @@ stages:
     - task: Ansible@0
       inputs:
         ansibleInterface: 'agentMachine'
-        playbookPathOnAgentMachine: '$(Pipeline.Workspace)/drop-$(pythonVersion)/a/ansible/playbook_p0_1.yml'
+        playbookPathOnAgentMachine: '$(Pipeline.Workspace)/drop-$(pythonVersion)/ansible/playbook_p0_1.yml'
         inventoriesAgentMachine: 'file'
         inventoryFileOnAgentMachine: '$(Pipeline.Workspace)/drop-$(pythonVersion)/a/ansible/inventory.yml'
         args: '-l development --extra-vars "ansible_python_interpreter=/usr/bin/python3 deprecation_warnings=True"'
