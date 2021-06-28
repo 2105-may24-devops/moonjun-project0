@@ -1,0 +1,13 @@
+pipeline {
+	agent { label 'master' }
+	stages {
+		stage('Dependencies') {
+			steps {
+				sh '''
+				apt-get install python3
+				python3 -m pip install --upgrade pip && pip install -r requirements.txt
+				'''
+			}
+		}
+	}
+}
