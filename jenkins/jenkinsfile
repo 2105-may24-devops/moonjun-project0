@@ -1,6 +1,9 @@
 node {
 	stage('Publish') {
 		checkout scm
+		// Install dependencies
 		python3 -m pip install --upgrade pip && pip install -r requirements.txt
+		archiveArtifacts artifacts: './moonjun-project0/*.py', './moonjun-project0/requirements.txt', './moonjun-project0/ansible/**'
+
 	}
 }
