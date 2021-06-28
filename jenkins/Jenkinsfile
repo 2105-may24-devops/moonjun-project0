@@ -1,13 +1,14 @@
 pipeline {
-	agent { label 'master' }
+	agent any
 	stages {
-		stage('Dependencies') {
+		stage('Build') {
 			steps {
 				sh '''
-				python3 -m pip install --upgrade pip && pip install -r requirements.txt
-				python3 -m pip install python3-venv
+				python3 -m pip install --upgrade pip
+				python3 -m pip install --upgrade venv
 				python3 -m venv venv
 				. venv/bin/activate
+				python3 -m pip install -r requirements.txt
 				'''
 			}
 		}
