@@ -14,7 +14,7 @@ pipeline {
 		stage('Deploy') {
 			steps {
 				ansiblePlaybook(
-					credentialsId: 'trainer-vm-key',
+					credentialsId: '32efe458-db46-4ef4-a8fb-3edb9380c38c',
 					inventory: 'jenkins/inventory.yml',
 					playbook: 'ansible/playbook_p0_1.yml',
 					disableHostKeyChecking: true)
