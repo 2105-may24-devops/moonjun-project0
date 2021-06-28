@@ -2,22 +2,21 @@ pipeline {
 	agent none
 	stages {
 		stage('Build') {
-			agent {
-				docker {
-					image 'python:3.6.13-slim-buster'
-				}
-			}
 			steps {
-				sh 'echo $HOME'
-				with(["HOME=${env.WORKSPACE}"]) {
-					sh '''
-					pip install --upgrade pip
-					pip install --upgrade venv
-					python3 -m venv venv
-					. venv/bin/activate
-					pip install -r requirements.txt
-					'''
-				}
+				sh '''
+				python3 -m venv venv
+				. venv/bin/activate
+				python3 -m pip install -r requirements.txt
+				'''
+			}
+		}
+		stage('Deploy') {
+			steps {
+				ansiblePlaybook(
+					credentialsId: 'trainer-vm-key',
+					inventory: 'ansible/inventory.yml',
+					playbook: 'playbook_p0_1.yml',
+					disableHostKeyChecking: true)
 			}
 		}
 	}
